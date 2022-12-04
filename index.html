@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>MobilShop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="custom-font/fonts.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/bootsnav.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery.fancybox.css?v=2.1.5" media="screen" />
+    <link rel="stylesheet" href="css/custom.css" />
+
+    <style>
+        h2 {
+            color: darkred;
+        }
+        
+        p {
+            color: white;
+        }
+    </style>
+</head>
+
+<body style="background-image: url(https://www.rd.com/wp-content/uploads/2020/07/GettyImages-1136195966.jpg?fit=700,1024); background-repeat: no-repeat; background-size: cover;">
+    <header>
+        <nav class="navbar bootsnav" style="background-color: rgb(62, 70, 234)">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+                            <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="navbar-menu">
+                    <ul class="nav navbar-nav menu">
+                        <li><a href="#unos">Dodaj novi telefon</a></li>
+                        <li><a href="#izmena">Izmeni telefon</a></li>
+                        <li><a href="#pretragaisortiranje">Pretraži telefone</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="unos">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="about_content">
+                        <h2 style="color: white;">Dodaj novi telefon</h2>
+                        <label for="model" style="color: white;">Model telefona</label>
+                        <input type="text" class="form-control" id="model">
+                        <label for="tekst" style="color: white;">Detalji</label>
+                        <textarea class="form-control" rows="3" id="tekst"></textarea>
+                        <label for="proizvodjac" style="color: white;">Proizvodjac</label>
+                        <select class="form-control" id="proizvodjac">
+                        </select>
+                        <label for="cena" style="color: white;">Cena</label>
+                        <input type="number" class="form-control" id="cena">
+
+                        <button class="btn know_btn" style="background-color:rgb(62, 72, 212);" onclick="dodajTelefon()">Dodaj</button>
+
+                        <div style="color: white;" id="odgovorUnos">
+                            
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="izmena">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="about_content">
+                        <h2 style="color: white;">Izmeni podatke o telefonu</h2>
+
+                        <label style="color: white;" for="telefonIzmena">Model</label>
+                        <select class="form-control" id="telefonIzmena">
+
+                        </select>
+                        <label style="color: white;" for="TekstIzmena">Detalji</label>
+                        <textarea class="form-control" rows="3" id="TekstIzmena"></textarea>
+
+                        <label style="color: white;" for="cenaIzmena">Cena</label>
+                        <input type="text" class="form-control" id="cenaIzmena">
+
+                        <button class="btn know_btn" style="background-color: rgb(63, 37, 169);" onclick="izmeniTelefon()">Izmeni</button>
+                        
+                        <div id="odgovorIzmena">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section id="pretragaisortiranje">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="about_content">
+                        <h2 style="color: white;">Pretraga telefona</h2>
+                        <label style="color: white; " for="pretraga">Izaberi proizvodjaca</label>
+                        <select class="form-control" id="pretraga" onchange="pretrazi()">
+
+                        </select>
+                        <label style="color: white;" for="sort">Sortiraj - po ceni</label>
+                        <select class="form-control" id="sort" onchange="pretrazi()">
+                                <option value="asc">Rastuće</option>
+                                <option value="desc">Opadajuće</option>
+                            </select>
+
+                        <br>    
+
+                        <hr>
+
+                        <br>
+
+                        <div id="tabela" style="color: white;">
+
+                        </div>
+
+                        <br>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <footer>
+        <div class="footer_bottom text-center" style="background-color: rgb(30, 0, 139)">
+            <p style="color: white;">MobilShop.rs</p>
+        </div>
+    </footer>
+
+    <script src="js/jquery-1.12.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootsnav.js"></script>
+    <script src="js/isotope.js"></script>
+    <script src="js/isotope-active.js"></script>
+    <script src="js/jquery.fancybox.js?v=2.1.5"></script>
+    <script src="js/jquery.scrollUp.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        function vratiKomboProizvodjac() {
+            $.ajax({
+                url: 'vratiKomboProizvodjac.php',
+                success: function(data) {
+                    $("#proizvodjac").html(data);
+                    $("#pretraga").html(data);
+                    pretrazi();
+                }
+            });
+        }
+        vratiKomboProizvodjac();
+
+        function vratiKomboTelefon() {
+            $.ajax({
+                url: 'vratiKomboTelefon.php',
+                success: function(data) {
+                    $("#telefonIzmena").html(data);
+                }
+            });
+        }
+        vratiKomboTelefon();
+
+        function dodajTelefon() {
+            let podaci = {
+                model: $("#model").val(),
+                tekst: $("#tekst").val(),
+                proizvodjac: $("#proizvodjac").val(),
+                cena: $("#cena").val()
+            };
+
+            $.ajax({
+                url: 'dodajTelefon.php',
+                type: 'POST',
+                data: podaci,
+                success: function(data) {
+                    $("#odgovorUnos").html(data);
+                    pretrazi();
+                    vratiKomboProizvodjac();
+                    vratiKomboTelefon();
+                },
+                error: function () {
+                    header('Location: ' . $_SERVER['HTTP_REFERER']); //vraca na prethodnu stranu
+                }
+            });
+        }
+
+        function pretrazi() {
+            let podaci = {
+                pretraga: $("#pretraga").val(),
+                sort: $("#sort").val()
+            };
+
+            $.ajax({
+                url: 'pretraziTelefone.php',
+                type: 'POST',
+                data: podaci,
+                success: function(data) {
+                    $("#tabela").html(data);
+                }
+            });
+        }
+
+        function obrisi(id) {
+            $.ajax({
+                url: 'obrisi.php?id=' + id,
+                success: function(data) {
+                    $("#odgovorUnos").html(data);
+                    pretrazi();
+                    vratiKomboTelefon();
+                }
+            });
+        }
+
+        function izmeniTelefon() {
+            let podaci = {
+                telefonID: $("#telefonIzmena").val(),
+                tekst: $("#TekstIzmena").val(),
+                cena: $("#cenaIzmena").val()
+            };
+
+            $.ajax({
+                url: 'izmeniTelefon.php',
+                type: 'POST',
+                data: podaci,
+                success: function(data) {
+                    console.log(data);
+                    $("#odgovorIzmena").html(data);
+                    pretrazi();
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>gi
